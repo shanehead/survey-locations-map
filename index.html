@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>Survey locations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<style>
+  html, body, #map { height: 100%; margin: 0; }
+  .popup-img { width: 220px; display: block; margin-bottom: 6px; }
+  .popup-link { font: 13px system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+const photos = [
+ {
+  "name": "IMG_6420",
+  "lat": 43.7717,
+  "lon": -72.3627,
+  "time": "2026-11-21T12:58:33-0500",
+  "href": "stills/IMG_6420.png"
+ },
+ {
+  "name": "IMG_6421",
+  "lat": 43.7716,
+  "lon": -72.3624,
+  "time": "2026-11-21T12:58:38-0500",
+  "href": "stills/IMG_6421.png"
+ },
+ {
+  "name": "IMG_6422",
+  "lat": 43.771633,
+  "lon": -72.36227,
+  "time": "2026-11-21T13:00:17-0500",
+  "href": "stills/IMG_6422.png"
+ },
+ {
+  "name": "IMG_6423",
+  "lat": 43.771636,
+  "lon": -72.362259,
+  "time": "2026-11-21T13:00:25-0500",
+  "href": "stills/IMG_6423.png"
+ },
+ {
+  "name": "IMG_6424",
+  "lat": 43.771639,
+  "lon": -72.362245,
+  "time": "2026-11-21T13:00:35-0500",
+  "href": "stills/IMG_6424.png"
+ },
+ {
+  "name": "IMG_6425",
+  "lat": 43.771646,
+  "lon": -72.362214,
+  "time": "2026-11-21T13:00:58-0500",
+  "href": "stills/IMG_6425.png"
+ },
+ {
+  "name": "IMG_6426",
+  "lat": 43.771663,
+  "lon": -72.362139,
+  "time": "2026-11-21T13:01:54-0500",
+  "href": "stills/IMG_6426.png"
+ },
+ {
+  "name": "IMG_6427",
+  "lat": 43.7717,
+  "lon": -72.3621,
+  "time": "2026-11-21T13:02:35-0500",
+  "href": "stills/IMG_6427.png"
+ },
+ {
+  "name": "IMG_6428",
+  "lat": 43.7717,
+  "lon": -72.3621,
+  "time": "2026-11-21T13:02:42-0500",
+  "href": "stills/IMG_6428.png"
+ },
+ {
+  "name": "IMG_6429",
+  "lat": 43.7717,
+  "lon": -72.362,
+  "time": "2026-11-21T13:03:15-0500",
+  "href": "stills/IMG_6429.png"
+ },
+ {
+  "name": "IMG_6430",
+  "lat": 43.7717,
+  "lon": -72.362,
+  "time": "2026-11-21T13:03:25-0500",
+  "href": "stills/IMG_6430.png"
+ },
+ {
+  "name": "IMG_6431",
+  "lat": 43.7719,
+  "lon": -72.3619,
+  "time": "2026-11-21T13:04:16-0500",
+  "href": "stills/IMG_6431.png"
+ },
+ {
+  "name": "IMG_6432",
+  "lat": 43.7719,
+  "lon": -72.3619,
+  "time": "2026-11-21T13:04:24-0500",
+  "href": "stills/IMG_6432.png"
+ },
+ {
+  "name": "IMG_6433",
+  "lat": 43.7719,
+  "lon": -72.3619,
+  "time": "2026-11-21T13:04:59-0500",
+  "href": "stills/IMG_6433.png"
+ },
+ {
+  "name": "IMG_6434",
+  "lat": 43.772,
+  "lon": -72.3617,
+  "time": "2026-11-21T13:05:39-0500",
+  "href": "stills/IMG_6434.png"
+ },
+ {
+  "name": "IMG_6435",
+  "lat": 43.772,
+  "lon": -72.3617,
+  "time": "2026-11-21T13:05:52-0500",
+  "href": "stills/IMG_6435.png"
+ },
+ {
+  "name": "IMG_6436",
+  "lat": 43.772,
+  "lon": -72.3617,
+  "time": "2026-11-21T13:05:59-0500",
+  "href": "stills/IMG_6436.png"
+ },
+ {
+  "name": "IMG_6437",
+  "lat": 43.7721,
+  "lon": -72.3617,
+  "time": "2026-11-21T13:06:07-0500",
+  "href": "stills/IMG_6437.png"
+ },
+ {
+  "name": "IMG_6438",
+  "lat": 43.7721,
+  "lon": -72.3617,
+  "time": "2026-11-21T13:06:16-0500",
+  "href": "stills/IMG_6438.png"
+ },
+ {
+  "name": "IMG_6439",
+  "lat": 43.7722,
+  "lon": -72.3616,
+  "time": "2026-11-21T13:07:01-0500",
+  "href": "stills/IMG_6439.png"
+ },
+ {
+  "name": "IMG_6440",
+  "lat": 43.7722,
+  "lon": -72.3616,
+  "time": "2026-11-21T13:07:17-0500",
+  "href": "stills/IMG_6440.png"
+ },
+ {
+  "name": "IMG_6441",
+  "lat": 43.7722,
+  "lon": -72.3615,
+  "time": "2026-11-21T13:07:56-0500",
+  "href": "stills/IMG_6441.png"
+ },
+ {
+  "name": "IMG_6442",
+  "lat": 43.7723,
+  "lon": -72.3615,
+  "time": "2026-11-21T13:08:00-0500",
+  "href": "stills/IMG_6442.png"
+ },
+ {
+  "name": "IMG_6443",
+  "lat": 43.7723,
+  "lon": -72.3615,
+  "time": "2026-11-21T13:08:15-0500",
+  "href": "stills/IMG_6443.png"
+ },
+ {
+  "name": "IMG_6444",
+  "lat": 43.7723,
+  "lon": -72.3615,
+  "time": "2026-11-21T13:08:29-0500",
+  "href": "stills/IMG_6444.png"
+ },
+ {
+  "name": "IMG_6445",
+  "lat": 43.7723,
+  "lon": -72.3614,
+  "time": "2026-11-21T13:08:46-0500",
+  "href": "stills/IMG_6445.png"
+ },
+ {
+  "name": "IMG_6446",
+  "lat": 43.7723,
+  "lon": -72.3615,
+  "time": "2026-11-21T13:08:55-0500",
+  "href": "stills/IMG_6446.png"
+ },
+ {
+  "name": "IMG_6447",
+  "lat": 43.7723,
+  "lon": -72.3614,
+  "time": "2026-11-21T13:09:34-0500",
+  "href": "stills/IMG_6447.png"
+ },
+ {
+  "name": "IMG_6448",
+  "lat": 43.7723,
+  "lon": -72.3614,
+  "time": "2026-11-21T13:09:41-0500",
+  "href": "stills/IMG_6448.png"
+ },
+ {
+  "name": "IMG_6449",
+  "lat": 43.7724,
+  "lon": -72.3614,
+  "time": "2026-11-21T13:09:50-0500",
+  "href": "stills/IMG_6449.png"
+ },
+ {
+  "name": "IMG_6450",
+  "lat": 43.7724,
+  "lon": -72.3614,
+  "time": "2026-11-21T13:09:54-0500",
+  "href": "stills/IMG_6450.png"
+ },
+ {
+  "name": "IMG_6451",
+  "lat": 43.7724,
+  "lon": -72.3613,
+  "time": "2026-11-21T13:10:14-0500",
+  "href": "stills/IMG_6451.png"
+ },
+ {
+  "name": "IMG_6452",
+  "lat": 43.7724,
+  "lon": -72.3613,
+  "time": "2026-11-21T13:10:23-0500",
+  "href": "stills/IMG_6452.png"
+ },
+ {
+  "name": "IMG_6453",
+  "lat": 43.7725,
+  "lon": -72.3613,
+  "time": "2026-11-21T13:10:59-0500",
+  "href": "stills/IMG_6453.png"
+ },
+ {
+  "name": "IMG_6454",
+  "lat": 43.7725,
+  "lon": -72.3613,
+  "time": "2026-11-21T13:11:06-0500",
+  "href": "stills/IMG_6454.png"
+ },
+ {
+  "name": "IMG_6455",
+  "lat": 43.7725,
+  "lon": -72.3613,
+  "time": "2026-11-21T13:11:17-0500",
+  "href": "stills/IMG_6455.png"
+ },
+ {
+  "name": "IMG_6456",
+  "lat": 43.7725,
+  "lon": -72.3612,
+  "time": "2026-11-21T13:11:29-0500",
+  "href": "stills/IMG_6456.png"
+ },
+ {
+  "name": "IMG_6457",
+  "lat": 43.7725,
+  "lon": -72.3612,
+  "time": "2026-11-21T13:11:33-0500",
+  "href": "stills/IMG_6457.png"
+ },
+ {
+  "name": "IMG_6458",
+  "lat": 43.7726,
+  "lon": -72.3612,
+  "time": "2026-11-21T13:11:51-0500",
+  "href": "stills/IMG_6458.png"
+ },
+ {
+  "name": "IMG_6459",
+  "lat": 43.7726,
+  "lon": -72.3612,
+  "time": "2026-11-21T13:12:03-0500",
+  "href": "stills/IMG_6459.png"
+ },
+ {
+  "name": "IMG_6460",
+  "lat": 43.7726,
+  "lon": -72.3612,
+  "time": "2026-11-21T13:12:15-0500",
+  "href": "stills/IMG_6460.png"
+ },
+ {
+  "name": "IMG_6461",
+  "lat": 43.7726,
+  "lon": -72.3612,
+  "time": "2026-11-21T13:12:20-0500",
+  "href": "stills/IMG_6461.png"
+ },
+ {
+  "name": "IMG_6462",
+  "lat": 43.7727,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:13:01-0500",
+  "href": "stills/IMG_6462.png"
+ },
+ {
+  "name": "IMG_6463",
+  "lat": 43.7727,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:13:10-0500",
+  "href": "stills/IMG_6463.png"
+ },
+ {
+  "name": "IMG_6464",
+  "lat": 43.7727,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:13:15-0500",
+  "href": "stills/IMG_6464.png"
+ },
+ {
+  "name": "IMG_6465",
+  "lat": 43.7727,
+  "lon": -72.361,
+  "time": "2026-11-21T13:13:50-0500",
+  "href": "stills/IMG_6465.png"
+ },
+ {
+  "name": "IMG_6466",
+  "lat": 43.7727,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:13:57-0500",
+  "href": "stills/IMG_6466.png"
+ },
+ {
+  "name": "IMG_6467",
+  "lat": 43.7728,
+  "lon": -72.361,
+  "time": "2026-11-21T13:14:16-0500",
+  "href": "stills/IMG_6467.png"
+ },
+ {
+  "name": "IMG_6468",
+  "lat": 43.7728,
+  "lon": -72.361,
+  "time": "2026-11-21T13:14:28-0500",
+  "href": "stills/IMG_6468.png"
+ },
+ {
+  "name": "IMG_6469",
+  "lat": 43.7729,
+  "lon": -72.3609,
+  "time": "2026-11-21T13:15:00-0500",
+  "href": "stills/IMG_6469.png"
+ },
+ {
+  "name": "IMG_6470",
+  "lat": 43.7729,
+  "lon": -72.3609,
+  "time": "2026-11-21T13:15:16-0500",
+  "href": "stills/IMG_6470.png"
+ },
+ {
+  "name": "IMG_6471",
+  "lat": 43.7729,
+  "lon": -72.3609,
+  "time": "2026-11-21T13:15:28-0500",
+  "href": "stills/IMG_6471.png"
+ },
+ {
+  "name": "IMG_6472",
+  "lat": 43.7729,
+  "lon": -72.3609,
+  "time": "2026-11-21T13:15:35-0500",
+  "href": "stills/IMG_6472.png"
+ },
+ {
+  "name": "IMG_6473",
+  "lat": 43.7729,
+  "lon": -72.3608,
+  "time": "2026-11-21T13:15:43-0500",
+  "href": "stills/IMG_6473.png"
+ },
+ {
+  "name": "IMG_6474",
+  "lat": 43.7729,
+  "lon": -72.3608,
+  "time": "2026-11-21T13:15:54-0500",
+  "href": "stills/IMG_6474.png"
+ },
+ {
+  "name": "IMG_6475",
+  "lat": 43.773,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:16:20-0500",
+  "href": "stills/IMG_6475.png"
+ },
+ {
+  "name": "IMG_6476",
+  "lat": 43.773,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:16:29-0500",
+  "href": "stills/IMG_6476.png"
+ },
+ {
+  "name": "IMG_6477",
+  "lat": 43.7731,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:16:43-0500",
+  "href": "stills/IMG_6477.png"
+ },
+ {
+  "name": "IMG_6478",
+  "lat": 43.7731,
+  "lon": -72.3606,
+  "time": "2026-11-21T13:16:50-0500",
+  "href": "stills/IMG_6478.png"
+ },
+ {
+  "name": "IMG_6479",
+  "lat": 43.7732,
+  "lon": -72.3606,
+  "time": "2026-11-21T13:17:05-0500",
+  "href": "stills/IMG_6479.png"
+ },
+ {
+  "name": "IMG_6480",
+  "lat": 43.7732,
+  "lon": -72.3606,
+  "time": "2026-11-21T13:17:14-0500",
+  "href": "stills/IMG_6480.png"
+ },
+ {
+  "name": "IMG_6481",
+  "lat": 43.7732,
+  "lon": -72.3606,
+  "time": "2026-11-21T13:17:24-0500",
+  "href": "stills/IMG_6481.png"
+ },
+ {
+  "name": "IMG_6482",
+  "lat": 43.7732,
+  "lon": -72.3605,
+  "time": "2026-11-21T13:17:38-0500",
+  "href": "stills/IMG_6482.png"
+ },
+ {
+  "name": "IMG_6483",
+  "lat": 43.7732,
+  "lon": -72.3605,
+  "time": "2026-11-21T13:17:44-0500",
+  "href": "stills/IMG_6483.png"
+ },
+ {
+  "name": "IMG_6484",
+  "lat": 43.7733,
+  "lon": -72.3605,
+  "time": "2026-11-21T13:17:58-0500",
+  "href": "stills/IMG_6484.png"
+ },
+ {
+  "name": "IMG_6485",
+  "lat": 43.7734,
+  "lon": -72.3604,
+  "time": "2026-11-21T13:18:29-0500",
+  "href": "stills/IMG_6485.png"
+ },
+ {
+  "name": "IMG_6486",
+  "lat": 43.7734,
+  "lon": -72.3604,
+  "time": "2026-11-21T13:18:37-0500",
+  "href": "stills/IMG_6486.png"
+ },
+ {
+  "name": "IMG_6487",
+  "lat": 43.7734,
+  "lon": -72.3604,
+  "time": "2026-11-21T13:18:50-0500",
+  "href": "stills/IMG_6487.png"
+ },
+ {
+  "name": "IMG_6488",
+  "lat": 43.7735,
+  "lon": -72.3603,
+  "time": "2026-11-21T13:19:09-0500",
+  "href": "stills/IMG_6488.png"
+ },
+ {
+  "name": "IMG_6489",
+  "lat": 43.7736,
+  "lon": -72.3602,
+  "time": "2026-11-21T13:19:34-0500",
+  "href": "stills/IMG_6489.png"
+ },
+ {
+  "name": "IMG_6490",
+  "lat": 43.7736,
+  "lon": -72.3601,
+  "time": "2026-11-21T13:20:22-0500",
+  "href": "stills/IMG_6490.png"
+ },
+ {
+  "name": "IMG_6491",
+  "lat": 43.7736,
+  "lon": -72.3601,
+  "time": "2026-11-21T13:20:26-0500",
+  "href": "stills/IMG_6491.png"
+ },
+ {
+  "name": "IMG_6492",
+  "lat": 43.7736,
+  "lon": -72.3602,
+  "time": "2026-11-21T13:20:58-0500",
+  "href": "stills/IMG_6492.png"
+ },
+ {
+  "name": "IMG_6493",
+  "lat": 43.7737,
+  "lon": -72.3603,
+  "time": "2026-11-21T13:21:13-0500",
+  "href": "stills/IMG_6493.png"
+ },
+ {
+  "name": "IMG_6494",
+  "lat": 43.7737,
+  "lon": -72.3604,
+  "time": "2026-11-21T13:21:23-0500",
+  "href": "stills/IMG_6494.png"
+ },
+ {
+  "name": "IMG_6495",
+  "lat": 43.7737,
+  "lon": -72.3604,
+  "time": "2026-11-21T13:21:51-0500",
+  "href": "stills/IMG_6495.png"
+ },
+ {
+  "name": "IMG_6496",
+  "lat": 43.7737,
+  "lon": -72.3604,
+  "time": "2026-11-21T13:21:55-0500",
+  "href": "stills/IMG_6496.png"
+ },
+ {
+  "name": "IMG_6497",
+  "lat": 43.7738,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:24:08-0500",
+  "href": "stills/IMG_6497.png"
+ },
+ {
+  "name": "IMG_6498",
+  "lat": 43.7738,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:24:13-0500",
+  "href": "stills/IMG_6498.png"
+ },
+ {
+  "name": "IMG_6499",
+  "lat": 43.7738,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:24:21-0500",
+  "href": "stills/IMG_6499.png"
+ },
+ {
+  "name": "IMG_6500",
+  "lat": 43.7738,
+  "lon": -72.3607,
+  "time": "2026-11-21T13:24:26-0500",
+  "href": "stills/IMG_6500.png"
+ },
+ {
+  "name": "IMG_6501",
+  "lat": 43.7739,
+  "lon": -72.361,
+  "time": "2026-11-21T13:25:27-0500",
+  "href": "stills/IMG_6501.png"
+ },
+ {
+  "name": "IMG_6502",
+  "lat": 43.7739,
+  "lon": -72.361,
+  "time": "2026-11-21T13:25:33-0500",
+  "href": "stills/IMG_6502.png"
+ },
+ {
+  "name": "IMG_6503",
+  "lat": 43.7739,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:25:45-0500",
+  "href": "stills/IMG_6503.png"
+ },
+ {
+  "name": "IMG_6504",
+  "lat": 43.7739,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:25:54-0500",
+  "href": "stills/IMG_6504.png"
+ },
+ {
+  "name": "IMG_6505",
+  "lat": 43.7739,
+  "lon": -72.3611,
+  "time": "2026-11-21T13:26:08-0500",
+  "href": "stills/IMG_6505.png"
+ },
+ {
+  "name": "IMG_6506",
+  "lat": 43.774,
+  "lon": -72.3616,
+  "time": "2026-11-21T13:28:23-0500",
+  "href": "stills/IMG_6506.png"
+ },
+ {
+  "name": "IMG_6507",
+  "lat": 43.7741,
+  "lon": -72.3617,
+  "time": "2026-11-21T13:29:13-0500",
+  "href": "stills/IMG_6507.png"
+ },
+ {
+  "name": "IMG_6508",
+  "lat": 43.7741,
+  "lon": -72.3618,
+  "time": "2026-11-21T13:29:42-0500",
+  "href": "stills/IMG_6508.png"
+ },
+ {
+  "name": "IMG_6509",
+  "lat": 43.7742,
+  "lon": -72.3619,
+  "time": "2026-11-21T13:29:57-0500",
+  "href": "stills/IMG_6509.png"
+ },
+ {
+  "name": "IMG_6510",
+  "lat": 43.7742,
+  "lon": -72.362,
+  "time": "2026-11-21T13:30:24-0500",
+  "href": "stills/IMG_6510.png"
+ },
+ {
+  "name": "IMG_6511",
+  "lat": 43.7743,
+  "lon": -72.3622,
+  "time": "2026-11-21T13:30:46-0500",
+  "href": "stills/IMG_6511.png"
+ },
+ {
+  "name": "IMG_6512",
+  "lat": 43.7743,
+  "lon": -72.3622,
+  "time": "2026-11-21T13:30:59-0500",
+  "href": "stills/IMG_6512.png"
+ },
+ {
+  "name": "IMG_6513",
+  "lat": 43.7743,
+  "lon": -72.3623,
+  "time": "2026-11-21T13:31:14-0500",
+  "href": "stills/IMG_6513.png"
+ },
+ {
+  "name": "IMG_6514",
+  "lat": 43.7743,
+  "lon": -72.3623,
+  "time": "2026-11-21T13:31:21-0500",
+  "href": "stills/IMG_6514.png"
+ },
+ {
+  "name": "IMG_6515",
+  "lat": 43.7743,
+  "lon": -72.3624,
+  "time": "2026-11-21T13:31:40-0500",
+  "href": "stills/IMG_6515.png"
+ },
+ {
+  "name": "IMG_6516",
+  "lat": 43.7744,
+  "lon": -72.3625,
+  "time": "2026-11-21T13:31:54-0500",
+  "href": "stills/IMG_6516.png"
+ },
+ {
+  "name": "IMG_6517",
+  "lat": 43.7744,
+  "lon": -72.3627,
+  "time": "2026-11-21T13:32:20-0500",
+  "href": "stills/IMG_6517.png"
+ },
+ {
+  "name": "IMG_6518",
+  "lat": 43.7744,
+  "lon": -72.3627,
+  "time": "2026-11-21T13:32:24-0500",
+  "href": "stills/IMG_6518.png"
+ },
+ {
+  "name": "IMG_6519",
+  "lat": 43.7745,
+  "lon": -72.3629,
+  "time": "2026-11-21T13:32:46-0500",
+  "href": "stills/IMG_6519.png"
+ },
+ {
+  "name": "IMG_6520",
+  "lat": 43.7745,
+  "lon": -72.3631,
+  "time": "2026-11-21T13:33:01-0500",
+  "href": "stills/IMG_6520.png"
+ },
+ {
+  "name": "IMG_6521",
+  "lat": 43.7745,
+  "lon": -72.3632,
+  "time": "2026-11-21T13:33:26-0500",
+  "href": "stills/IMG_6521.png"
+ }
+];
+
+const map = L.map("map").setView([43.772979, -72.361351], 18);
+const streets = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 22,
+  maxNativeZoom: 19,
+  attribution: "&copy; OpenStreetMap contributors"
+});
+const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 22,
+  maxNativeZoom: 19,
+  attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics"
+});
+streets.addTo(map);
+L.control.layers({ "Map": streets, "Satellite": satellite }).addTo(map);
+
+const cluster = L.markerClusterGroup({ maxClusterRadius: 25, spiderfyOnMaxZoom: true });
+for (const p of photos) {
+  const marker = L.marker([p.lat, p.lon], { title: p.name });
+  const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  marker.bindPopup(
+    `<a href="${esc(p.href)}" target="_blank"><img class="popup-img" src="${esc(p.href)}" alt="${esc(p.name)}"></a>` +
+    `<div class="popup-link"><a href="${esc(p.href)}" target="_blank">${esc(p.name)}</a><br>${esc(p.time)}<br>` +
+    `${p.lat.toFixed(6)}, ${p.lon.toFixed(6)}</div>`,
+    { maxWidth: 260 }
+  );
+  cluster.addLayer(marker);
+}
+map.addLayer(cluster);
+map.fitBounds(cluster.getBounds(), { padding: [30, 30] });
+</script>
+</body>
+</html>
