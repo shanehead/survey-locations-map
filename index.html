@@ -966,7 +966,7 @@ const orangePin = L.divIcon({
 });
 const cluster = addPhotoMarkers(photos);
 const cluster2 = addPhotoMarkers(newPhotos, orangePin, "orange");
-L.polyline(newPhotos.map(p => [p.lat, p.lon]), { color: "orange", weight: 3 }).addTo(map);
+L.polyline(newPhotos.map(p => [p.lat, p.lon]), { color: "orange", weight: 3, dashArray: "2 6" }).addTo(map);
 // Least squares fits. OLS is unaffected by per-axis scaling, so fitting in degrees gives the same line.
 const olsFit = (pts, xk, yk) => {
   const n = pts.length;
@@ -984,12 +984,12 @@ const northPts = photos.slice(idx("IMG_6490"));
 const fe = olsFit(eastPts, "lat", "lon");
 const eLat = eastPts.map(p => p.lat);
 const eS = Math.min(...eLat), eN = Math.max(...eLat);
-L.polyline([[eS, fe.a + fe.b * eS], [eN, fe.a + fe.b * eN]], { color: "green", weight: 3, dashArray: "6 6" }).addTo(map);
+L.polyline([[eS, fe.a + fe.b * eS], [eN, fe.a + fe.b * eN]], { color: "green", weight: 3 }).addTo(map);
 
 const fn = olsFit(northPts, "lon", "lat");
 const nLon = northPts.map(p => p.lon);
 const nW = Math.min(...nLon), nE = Math.max(...nLon);
-L.polyline([[fn.a + fn.b * nW, nW], [fn.a + fn.b * nE, nE]], { color: "green", weight: 3, dashArray: "6 6" }).addTo(map);
+L.polyline([[fn.a + fn.b * nW, nW], [fn.a + fn.b * nE, nE]], { color: "green", weight: 3 }).addTo(map);
 
 const bounds = cluster.getBounds().extend(cluster2.getBounds());
 map.fitBounds(bounds, { padding: [30, 30] });
