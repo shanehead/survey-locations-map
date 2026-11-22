@@ -727,6 +727,7 @@ for (const p of photos) {
   );
   cluster.addLayer(marker);
 }
+L.polyline(photos.map(p => [p.lat, p.lon]), { color: "green", weight: 3 }).addTo(map);
 map.addLayer(cluster);
 map.fitBounds(cluster.getBounds(), { padding: [30, 30] });
 </script>
