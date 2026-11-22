@@ -933,7 +933,6 @@ const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/servi
   attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics"
 });
 streets.addTo(map);
-L.control.layers({ "Map": streets, "Satellite": satellite }).addTo(map);
 
 const clusterIcon = color => cluster => L.divIcon({
   className: "",
@@ -954,7 +953,6 @@ const addPhotoMarkers = (list, icon = new L.Icon.Default(), color = null) => {
     );
     group.addLayer(marker);
   }
-  map.addLayer(group);
   return group;
 };
 const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
@@ -966,6 +964,8 @@ const dotPin = color => L.divIcon({
 });
 const cluster = addPhotoMarkers(photos, dotPin("green"), "green");
 const cluster2 = addPhotoMarkers(newPhotos, dotPin("orange"), "orange");
+const pins = L.layerGroup([cluster, cluster2]).addTo(map);
+L.control.layers({ "Map": streets, "Satellite": satellite }, { "Photo pins": pins }).addTo(map);
 L.polyline(newPhotos.map(p => [p.lat, p.lon]), { color: "orange", weight: 3, dashArray: "2 6" }).addTo(map);
 // Least squares fits. OLS is unaffected by per-axis scaling, so fitting in degrees gives the same line.
 const olsFit = (pts, xk, yk) => {
