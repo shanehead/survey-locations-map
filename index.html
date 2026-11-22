@@ -935,7 +935,7 @@ const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/servi
 streets.addTo(map);
 L.control.layers({ "Map": streets, "Satellite": satellite }).addTo(map);
 
-const addPhotoMarkers = (list, icon) => {
+const addPhotoMarkers = (list, icon = new L.Icon.Default()) => {
   const group = L.markerClusterGroup({ maxClusterRadius: 25, spiderfyOnMaxZoom: true });
   for (const p of list) {
     const marker = L.marker([p.lat, p.lon], { title: p.name, icon });
