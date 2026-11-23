@@ -18,6 +18,7 @@
 <div id="map"></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
 <script>
 const photos = [
  {
@@ -965,7 +966,14 @@ const dotPin = color => L.divIcon({
 const cluster = addPhotoMarkers(photos, dotPin("green"), "green");
 const cluster2 = addPhotoMarkers(newPhotos, dotPin("orange"), "orange");
 const pins = L.layerGroup([cluster, cluster2]).addTo(map);
-L.control.layers({ "Map": streets, "Satellite": satellite }, { "Photo pins": pins }).addTo(map);
+// VCGI statewide parcels (public ArcGIS service). Shown from zoom 16 to keep the feature count per request small.
+const parcels = L.esri.featureLayer({
+  url: "https://services1.arcgis.com/BkFxaEFNwHqX3tAw/ArcGIS/rest/services/FS_VCGI_VTPARCELS_WM_NOCACHE_v2/FeatureServer/1",
+  minZoom: 16,
+  style: () => ({ color: "#333", weight: 1, fillOpacity: 0 }),
+  onEachFeature: (f, layer) => layer.bindPopup(`${f.properties.E911ADDR || ""}<br>Parcel ${f.properties.PARCID || ""}`)
+}).addTo(map);
+L.control.layers({ "Map": streets, "Satellite": satellite }, { "Photo pins": pins, "VT parcels": parcels }).addTo(map);
 L.polyline(newPhotos.map(p => [p.lat, p.lon]), { color: "orange", weight: 3, dashArray: "2 6" }).addTo(map);
 // Least squares fits. OLS is unaffected by per-axis scaling, so fitting in degrees gives the same line.
 const olsFit = (pts, xk, yk) => {
